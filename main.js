@@ -4,7 +4,7 @@ const categories = [{
     category: "Geography",
     questions: [
         {
-            q: "What is the name given to a pond formed from a meander cut off from a river after it forms a more direct channel?",
+            q: "What is the name given to a pond formed from a meander being cut off from a river?",
             answers: [
                 {
                     a: "Oxbow lake",
@@ -19,7 +19,7 @@ const categories = [{
                     correct: false
                 },
                 {
-                    a: "Aurocharc reservoir",
+                    a: "Auroch-arc reservoir",
                     correct: false
                 }
             ]
@@ -68,22 +68,64 @@ const categories = [{
             ]
         },
         {
-            q: "Indonesia is currently building itself a new capital city on which island?",
+            q: "What is the refrain in 'Hey Jude' by the Beatles?",
             answers: [
                 {
-                    a: "Sumatra",
+                    a: "Raa raa raa rarararaaa rarararaaa, hey Jude",
                     correct: false
                 },
                 {
-                    a: "Borneo",
+                    a: "Laa laa laa lalalalaaa lalalalaaa, hey Jude",
+                    correct: false
+                },
+                {
+                    a: "Baa baa baa banananaaa banananaaa, hey Jude",
+                    correct: false
+                },
+                {
+                    a: "Naa naa naa nanananaaa nanananaaa, hey Jude",
+                    correct: true
+                }
+            ]
+        },
+        {
+            q: "'When We All Fall Asleep Where Do We Go?' is an album by what artist?",
+            answers: [
+                {
+                    a: "Panic! At The Disco",
+                    correct: false
+                },
+                {
+                    a: "Billie Eilish",
                     correct: true
                 },
                 {
-                    a: "New Guinea",
+                    a: "Mike Posner",
                     correct: false
                 },
                 {
-                    a: "JavaScript",
+                    a: "Lady Gaga",
+                    correct: false
+                }
+            ]
+        },
+        {
+            q: "In the UK, the Official Charts company publishes its top 40 on which day?",
+            answers: [
+                {
+                    a: "Wednesday",
+                    correct: false
+                },
+                {
+                    a: "Sunday",
+                    correct: false
+                },
+                {
+                    a: "Friday",
+                    correct: true
+                },
+                {
+                    a: "Monday",
                     correct: false
                 }
             ]
@@ -96,12 +138,37 @@ console.log("Categories loaded!")
 
 openCategory = (i) => {
     document.getElementById("category-list-div").remove();
-    console.log("The first question of category "+i+" would load now.");
     document.getElementById("category-head").textContent = categories[i].category;
+    openQuestion(i,0);
 
 }
 
-let categoryList = categories.map((cat, i)=>{
+openQuestion = (catNum, qNum) => {
+    console.log("The first question of category "+catNum+" would load now.");
+    document.getElementById("question-head").textContent = "Question "+qNum;
+    document.getElementById("question").textContent = categories[catNum].questions[qNum].q;
+    
+    let answers = categories[catNum].questions[qNum].answers;
+    answers.map((a, i)=>{
+        let node = document.createTextNode(a.a);
+        let button = document.createElement("button");
+        button.appendChild(node);
+    
+        button.addEventListener("click",()=>{giveAnswer(catNum, qNum, i)});
+    
+        let li = document.createElement("li");
+        li.appendChild(button);
+        document.getElementById("answer-list").appendChild(li);
+    })
+}
+
+giveAnswer = (catNum, qNum, aNum) => {
+    console.log("You selected answer "+aNum+"!")
+    let answerMessage = ( categories[catNum].questions[qNum].answers[aNum].correct ? "You got that right!" : "You got that wrong!" );
+    document.getElementById("response").innerText = answerMessage;
+}
+
+categories.map((cat, i)=>{
     let node = document.createTextNode(cat.category);
     let button = document.createElement("button");
     button.appendChild(node);
