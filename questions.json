@@ -1,0 +1,47 @@
+[{
+    "name": "Geography",
+    "questions": [
+        {
+            "q": "What is the name given to a pond formed from a meander cut off from a river after it forms a more direct channel?",
+            "answers": [
+                {
+                    "a": "Oxbow lake",
+                    "correct": true
+                },
+                {
+                    "a": "Cowcrook creek",
+                    "correct": false
+                },
+                {
+                    "a": "Bullbend bayou",
+                    "correct": false
+                },
+                {
+                    "a": "Aurocharc reservoir",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "q": "Indonesia is currently building itself a new capital city on which island?",
+            "answers": [
+                {
+                    "a": "Sumatra",
+                    "correct": false
+                },
+                {
+                    "a": "Borneo",
+                    "correct": true
+                },
+                {
+                    "a": "New Guinea",
+                    "correct": false
+                },
+                {
+                    "a": "JavaScript",
+                    "correct": false
+                }
+            ]
+        }
+    ]
+}]
