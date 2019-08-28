@@ -104,7 +104,7 @@ const categories = [{
                     correct: false
                 },
                 {
-                    a: "Lady Gaga",
+                    a: "Pink",
                     correct: false
                 }
             ]
@@ -127,6 +127,27 @@ const categories = [{
                 {
                     a: "Monday",
                     correct: false
+                }
+            ]
+        },
+        {
+            q: "What was number one in the UK singles chart when I was born?",
+            answers: [
+                {
+                    a: "'Love Is All Around' by Wet Wet Wet",
+                    correct: false
+                },
+                {
+                    a: "'C'est La Vie' by B*Witched",
+                    correct: false
+                },
+                {
+                    a: "'I Wanna Dance With Somebody (Who Loves Me)' by Whitney Houston",
+                    correct: false
+                },
+                {
+                    a: "'Killing Me Softly' by the Fugees",
+                    correct: true
                 }
             ]
         }
@@ -166,6 +187,15 @@ giveAnswer = (catNum, qNum, aNum) => {
     console.log("You selected answer "+aNum+"!")
     let answerMessage = ( categories[catNum].questions[qNum].answers[aNum].correct ? "You got that right!" : "You got that wrong!" );
     document.getElementById("response").innerText = answerMessage;
+
+    let nextQuestion = document.getElementById("next-question");
+    if (categories[catNum].questions[qNum+1]) {
+        nextQuestion.addEventListener("click", openQuestion(catNum, qNum+1))
+    }
+    else {
+        nextQuestion.remove();
+    }
+    
 }
 
 categories.map((cat, i)=>{
