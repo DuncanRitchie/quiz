@@ -106,7 +106,7 @@ const categories = [{
                     correct: false
                 },
                 {
-                    a: "Hawaii",
+                    a: "Hawaiʻi",
                     correct: false
                 },
                 {
@@ -432,6 +432,32 @@ const categories = [{
             ]
         }
     ]
+},
+{
+    category: "Sport",
+    questions: [
+        {
+            q: "What shape is a football (soccerball)?",
+            answers: [
+                {
+                    a: "Sphere",
+                    correct: true
+                },
+                {
+                    a: "Cylinder",
+                    correct: false
+                },
+                {
+                    a: "Cube",
+                    correct: false
+                },
+                {
+                    a: "Pyramid",
+                    correct: false
+                }
+            ]
+        }
+    ]
 }]
 
 console.log("Categories loaded!")
@@ -453,6 +479,9 @@ const answerList = document.getElementById("answer-list");
 const responseDiv = document.getElementById("response-div");
 const response = document.getElementById("response");
 let nextQuestion = document.getElementById("next-question"); // This button is regenerated after every question.
+const endOfCategory = document.getElementById("end-of-category");
+const endOfCategoryDiv = document.getElementById("end-of-category-div");
+const backToCategories = document.getElementById("back-to-categories");
 
 
 
@@ -462,7 +491,7 @@ let nextQuestion = document.getElementById("next-question"); // This button is r
 
 
 openCategory = (i) => {
-    categoryListDiv.remove();
+    categoryListDiv.style.display = "none";
     categoryHead.textContent = categories[i].category;
     openQuestion(i,0);
 
@@ -471,7 +500,10 @@ openCategory = (i) => {
 openQuestion = (catNum, qNum) => {
     console.log("Question "+(qNum+1)+" of category "+(catNum+1)+" should load now.");
 
-    questionHead.textContent = "Question "+(qNum+1);
+    const catLength = categories[catNum].questions.length;
+
+    questionHead.textContent = "Question "+(qNum+1)+" of "+catLength;
+    questionHead.style.display = "initial";
     questionDiv.style.display = "initial";
     question.textContent = categories[catNum].questions[qNum].q;
     
@@ -488,10 +520,9 @@ openQuestion = (catNum, qNum) => {
         li.appendChild(button);
         answerList.appendChild(li);
     })
-
+    
     responseDiv.style.display = "none";
-        
-    nextQuestion.removeEventListener("click",this)
+    
 }
 
 giveAnswer = (catNum, qNum, aNum) => {
@@ -514,29 +545,42 @@ giveAnswer = (catNum, qNum, aNum) => {
     // If there is a next question, we show a button to it.
     const nextQNum = qNum+1;
 
+    
+
+    // Remove any previous event listener by replacing the button with a clone.
+    newButton = nextQuestion.cloneNode();
+    nextQuestion.replaceWith(newButton);
+    nextQuestion = newButton;
+    nextQuestion.textContent = "Next question"
+
+    nextQuestion.addEventListener("click", ()=>{
+        console.log("Opening Question "+(nextQNum+1));
+        openQuestion(catNum, nextQNum)
+    })
+    responseDiv.style.display = "initial";
+    nextQuestion.style.display = "initial";
+    
     if (categories[catNum].questions[nextQNum]) {
         console.log("There is a next question.")
-
-        // Remove any previous event listener by replacing the button with a clone.
-        newButton = nextQuestion.cloneNode();
-        nextQuestion.replaceWith(newButton);
-        nextQuestion = newButton;
-        nextQuestion.textContent = "Next question"
-
-        nextQuestion.addEventListener("click", ()=>{
-            console.log("Opening Question "+(nextQNum+1));
-            openQuestion(catNum, nextQNum)
-        })
-        responseDiv.style.display = "initial";
-        nextQuestion.style.display = "initial";
     }
     else {
         console.log("There are no more questions in this category.")
-        nextQuestion.remove();
+        endCategory();
     }
-    
 }
 
+endCategory = () => {
+    nextQuestion.style.display = "none";
+    endOfCategoryDiv.style.display = "initial";
+}
+
+returnToCategories = () => {
+    questionHead.style.display = "none";
+    categoryListDiv.style.display = "initial";
+    endOfCategoryDiv.style.display = "none";
+    categoryHead.style.display = "none";
+    responseDiv.style.display = "none";
+}
 
 
 ////
@@ -555,3 +599,11 @@ categories.map((cat, i)=>{
     li.appendChild(button);
     categoryList.appendChild(li);
 })
+
+
+
+////
+//// EVENT LISTENERS
+////
+
+backToCategories.addEventListener("click",()=>{returnToCategories()});

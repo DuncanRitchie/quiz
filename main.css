@@ -1,9 +1,82 @@
 @import url('https://fonts.googleapis.com/css?family=Alegreya&display=swap');
 
+html {
+    height: 100%;
+    width: 100%;
+}
+
 body {
     font-family: 'Alegreya', serif;
+    text-align: center;
+    min-height: 100%;
+    width: 100%;
+    background-image: linear-gradient(to top, hotpink, salmon);
+    background-attachment: fixed;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    color: rgb(27, 27, 27);
+}
+
+#main {
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 36px
+}
+
+#question,#category-list-p {
+    padding: 0 12px;
+    font-size: 18px;
+}
+
+ul {
+    padding: 0
+}
+
+li {
+    list-style-type: none;
+}
+
+button {
+    background: rgb(226, 226, 226);
+    font-family: inherit;
+    font-size: 18px;
+    padding: 6px 12px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    width: 200px;
+    min-width: 25vw;
 }
 
 #next-question {
     display: none;
+}
+
+#end-of-category-div {
+    display: none;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 24px);
+    margin: 0 auto;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-image: linear-gradient(to bottom, hotpink, salmon);
+}
+
+a:link {
+    color: darkblue;
+}
+
+a:focus {
+    color: white
 }
