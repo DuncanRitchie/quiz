@@ -67,6 +67,27 @@ const categories = [{
             ]
         },
         {
+            q: "Which of these is not a US state capital?",
+            answers: [
+                {
+                    a: "Jacksonville",
+                    correct: true
+                },
+                {
+                    a: "Jefferson City",
+                    correct: false
+                },
+                {
+                    a: "Carson City",
+                    correct: false
+                },
+                {
+                    a: "Madison",
+                    correct: false
+                }
+            ]
+        },
+        {
             q: "What group of small islands is immediately south of St Vincent in the Caribbean?",
             answers: [
                 {
@@ -146,6 +167,48 @@ const categories = [{
                 },
                 {
                     a: "Lake Superior",
+                    correct: false
+                }
+            ]
+        },
+        {
+            q: "On their national flags, what do Kazakhstan, Kiribati, Montenegro, and Uganda all have in common?",
+            answers: [
+                {
+                    a: "The colour red",
+                    correct: false
+                },
+                {
+                    a: "The sun",
+                    correct: false
+                },
+                {
+                    a: "A bird",
+                    correct: true
+                },
+                {
+                    a: "Horizontal stripes",
+                    correct: false
+                }
+            ]
+        },
+        {
+            q: "Which of these is furthest south?",
+            answers: [
+                {
+                    a: "Tiger Bay",
+                    correct: false
+                },
+                {
+                    a: "Mandalay",
+                    correct: false
+                },
+                {
+                    a: "Bombay (Mumbai)",
+                    correct: true
+                },
+                {
+                    a: "Santa Fe (New Mexico)",
                     correct: false
                 }
             ]
@@ -297,6 +360,69 @@ const categories = [{
                     correct: true
                 }
             ]
+        },
+        {
+            q: "What is the bestselling single of all time in the UK?",
+            answers: [
+                {
+                    a: "'Happy' by Pharrell Williams",
+                    correct: false
+                },
+                {
+                    a: "'Candle in the Wind' by Elton John",
+                    correct: true
+                },
+                {
+                    a: "'Do They Know It's Christmas?' by Band Aid",
+                    correct: false
+                },
+                {
+                    a: "'Relax' by Frankie Goes To Hollywood",
+                    correct: false
+                }
+            ]
+        },
+        {
+            q: "Which of these is a song by Sia, featuring Sean Paul?",
+            answers: [
+                {
+                    a: "How Hard It Is",
+                    correct: false
+                },
+                {
+                    a: "Cheap Thrills",
+                    correct: true
+                },
+                {
+                    a: "Do What You Love",
+                    correct: false
+                },
+                {
+                    a: "Can't Go Home Again",
+                    correct: false
+                }
+            ]
+        },
+        {
+            q: "All the options for the previous question are names of studio albums by which band?",
+            answers: [
+                {
+                    a: "Paramore",
+                    correct: false
+                },
+                {
+                    a: "Jefferson Airplane",
+                    correct: false
+                },
+                {
+                    a: "Big Brother and the Holding Company",
+                    correct: true
+                },
+                {
+                    a: "Nickelback",
+                    correct: false
+                }
+            ]
         }
     ]
 }]
@@ -312,17 +438,18 @@ openCategory = (i) => {
 }
 
 openQuestion = (catNum, qNum) => {
-    console.log("The first question of category "+catNum+" would load now.");
+    console.log("Question "+(qNum+1)+" of category "+catNum+" should load now.");
     document.getElementById("question-head").textContent = "Question "+(qNum+1);
     document.getElementById("question").textContent = categories[catNum].questions[qNum].q;
     
-    let answers = categories[catNum].questions[qNum].answers;
-    let answerList = document.getElementById("answer-list")
+    const answers = categories[catNum].questions[qNum].answers;
+    const answerList = document.getElementById("answer-list")
     answers.map((a, i)=>{
         let node = document.createTextNode(a.a);
         let button = document.createElement("button");
         button.appendChild(node);
     
+        button.className = "answer-button";
         button.addEventListener("click",()=>{giveAnswer(catNum, qNum, i)});
     
         let li = document.createElement("li");
@@ -332,7 +459,15 @@ openQuestion = (catNum, qNum) => {
 }
 
 giveAnswer = (catNum, qNum, aNum) => {
+    const answerList = document.getElementById("answer-list");
+    // Clear any pre-existing answer options.
+    while (answerList.firstChild) {
+        answerList.removeChild(answerList.firstChild);
+    }
+
     console.log("You selected answer "+aNum+"!")
+
+    // Change the response to the answer option.
     let answerMessage = ( categories[catNum].questions[qNum].answers[aNum].correct ? "You got that right!" : "You got that wrong!" );
     document.getElementById("response").innerText = answerMessage;
 
