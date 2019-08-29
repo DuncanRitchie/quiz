@@ -26,7 +26,7 @@ const categories = [{
                     correct: false
                 },
                 {
-                    a: "Auroch-arc reservoir",
+                    a: "Kine-kink sink",
                     correct: false
                 }
             ]
@@ -484,6 +484,8 @@ const endOfCategoryDiv = document.getElementById("end-of-category-div");
 const backToCategories = document.getElementById("back-to-categories");
 const scoresDiv = document.getElementById("scores-div");
 const scoresList = document.getElementById("scores-list");
+const progressTrack = document.getElementById("progress-track");
+const progressBar = document.getElementById("progress-bar");
 
 
 
@@ -575,12 +577,16 @@ giveAnswer = (catNum, qNum, aNum) => {
     responseDiv.style.display = "initial";
     nextQuestion.style.display = "initial";
 
+    // Update scores if answered correctly.
     if (categories[catNum].questions[qNum].answers[aNum].correct) {
         scoresArray[catNum]++;
         updateScores();
     }
     
-    
+    // Increase the progress bar.
+    updateProgress(qNum+1, categories[catNum].questions.length);
+
+    // Console logs.
     if (categories[catNum].questions[nextQNum]) {
         console.log("There is a next question.")
     }
@@ -601,6 +607,15 @@ returnToCategories = () => {
     endOfCategoryDiv.style.display = "none";
     categoryHead.style.display = "none";
     responseDiv.style.display = "none";
+
+    updateProgress(0,1);
+}
+
+updateProgress = (numerator, denominator) => {
+    const newLength = 100*numerator/denominator
+    
+    console.log("Progress bar should be "+newLength+"%")
+    progressBar.style.width = newLength+"%";
 }
 
 updateScores = () => {

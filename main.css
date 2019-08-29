@@ -43,6 +43,13 @@ li {
     list-style-type: none;
 }
 
+#answer-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly
+}
+
 button {
     background: rgb(226, 226, 226);
     font-family: inherit;
@@ -51,11 +58,24 @@ button {
     margin-top: 6px;
     margin-bottom: 6px;
     width: 200px;
-    min-width: 25vw;
+    min-width: 18vw;
 }
 
 #question-div,#response-div,#end-of-category-div {
     display: none;
+}
+
+#progress-track {
+    width: 100%;
+    height: 12px;
+    background-color: bisque
+}
+
+#progress-bar {
+    width: 0%;
+    height: inherit;
+    background-color: sienna;
+    transition: width 0.8s linear;
 }
 
 footer {
