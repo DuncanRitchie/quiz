@@ -432,6 +432,32 @@ const categories = [{
             ]
         }
     ]
+},
+{
+    category: "Sport",
+    questions: [
+        {
+            q: "What shape is a football (soccerball)?",
+            answers: [
+                {
+                    a: "Sphere",
+                    correct: true
+                },
+                {
+                    a: "Cylinder",
+                    correct: false
+                },
+                {
+                    a: "Cube",
+                    correct: false
+                },
+                {
+                    a: "Pyramid",
+                    correct: false
+                }
+            ]
+        }
+    ]
 }]
 
 console.log("Categories loaded!")
@@ -453,6 +479,9 @@ const answerList = document.getElementById("answer-list");
 const responseDiv = document.getElementById("response-div");
 const response = document.getElementById("response");
 let nextQuestion = document.getElementById("next-question"); // This button is regenerated after every question.
+const endOfCategory = document.getElementById("end-of-category");
+const endOfCategoryDiv = document.getElementById("end-of-category-div");
+const backToCategories = document.getElementById("back-to-categories");
 
 
 
@@ -532,9 +561,14 @@ giveAnswer = (catNum, qNum, aNum) => {
     }
     else {
         console.log("There are no more questions in this category.")
-        nextQuestion.remove();
+        endCategory(catNum);
     }
     
+}
+
+endCategory = (catNum) => {
+    questionHead.style.display = "none";
+    endOfCategoryDiv.style.display = "initial";
 }
 
 

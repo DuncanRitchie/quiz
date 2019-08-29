@@ -57,6 +57,10 @@ button {
     display: none;
 }
 
+#end-of-category-div {
+    display: none;
+}
+
 footer {
     position: fixed;
     bottom: 0;
