@@ -491,7 +491,7 @@ const backToCategories = document.getElementById("back-to-categories");
 
 
 openCategory = (i) => {
-    categoryListDiv.remove();
+    categoryListDiv.style.display = "none";
     categoryHead.textContent = categories[i].category;
     openQuestion(i,0);
 
@@ -500,27 +500,32 @@ openCategory = (i) => {
 openQuestion = (catNum, qNum) => {
     console.log("Question "+(qNum+1)+" of category "+(catNum+1)+" should load now.");
 
-    questionHead.textContent = "Question "+(qNum+1);
-    questionDiv.style.display = "initial";
-    question.textContent = categories[catNum].questions[qNum].q;
-    
-    const answers = categories[catNum].questions[qNum].answers;
-    answers.map((a, i)=>{
-        let node = document.createTextNode(a.a);
-        let button = document.createElement("button");
-        button.appendChild(node);
-    
-        button.className = "answer-button";
-        button.addEventListener("click",()=>{giveAnswer(catNum, qNum, i)});
-    
-        let li = document.createElement("li");
-        li.appendChild(button);
-        answerList.appendChild(li);
-    })
-
-    responseDiv.style.display = "none";
+    // if (categories[catNum].questions[qNum]) {
+        questionHead.textContent = "Question "+(qNum+1);
+        questionDiv.style.display = "initial";
+        question.textContent = categories[catNum].questions[qNum].q;
         
-    nextQuestion.removeEventListener("click",this)
+        const answers = categories[catNum].questions[qNum].answers;
+        answers.map((a, i)=>{
+            let node = document.createTextNode(a.a);
+            let button = document.createElement("button");
+            button.appendChild(node);
+        
+            button.className = "answer-button";
+            button.addEventListener("click",()=>{giveAnswer(catNum, qNum, i)});
+        
+            let li = document.createElement("li");
+            li.appendChild(button);
+            answerList.appendChild(li);
+        })
+
+    // }
+    // else {
+    //     endCategory(catNum);
+    // }
+    
+    responseDiv.style.display = "none";
+    
 }
 
 giveAnswer = (catNum, qNum, aNum) => {
@@ -543,34 +548,42 @@ giveAnswer = (catNum, qNum, aNum) => {
     // If there is a next question, we show a button to it.
     const nextQNum = qNum+1;
 
+    
+
+    // Remove any previous event listener by replacing the button with a clone.
+    newButton = nextQuestion.cloneNode();
+    nextQuestion.replaceWith(newButton);
+    nextQuestion = newButton;
+    nextQuestion.textContent = "Next question"
+
+    nextQuestion.addEventListener("click", ()=>{
+        console.log("Opening Question "+(nextQNum+1));
+        openQuestion(catNum, nextQNum)
+    })
+    responseDiv.style.display = "initial";
+    nextQuestion.style.display = "initial";
+    
     if (categories[catNum].questions[nextQNum]) {
         console.log("There is a next question.")
-
-        // Remove any previous event listener by replacing the button with a clone.
-        newButton = nextQuestion.cloneNode();
-        nextQuestion.replaceWith(newButton);
-        nextQuestion = newButton;
-        nextQuestion.textContent = "Next question"
-
-        nextQuestion.addEventListener("click", ()=>{
-            console.log("Opening Question "+(nextQNum+1));
-            openQuestion(catNum, nextQNum)
-        })
-        responseDiv.style.display = "initial";
-        nextQuestion.style.display = "initial";
     }
     else {
         console.log("There are no more questions in this category.")
-        endCategory(catNum);
+        endCategory();
     }
-    
 }
 
-endCategory = (catNum) => {
+endCategory = () => {
+    nextQuestion.style.display = "none";
     questionHead.style.display = "none";
     endOfCategoryDiv.style.display = "initial";
 }
 
+returnToCategories = () => {
+    categoryListDiv.style.display = "initial";
+    endOfCategoryDiv.style.display = "none";
+    categoryHead.style.display = "none";
+    responseDiv.style.display = "none";
+}
 
 
 ////
@@ -589,3 +602,11 @@ categories.map((cat, i)=>{
     li.appendChild(button);
     categoryList.appendChild(li);
 })
+
+
+
+////
+//// EVENT LISTENERS
+////
+
+backToCategories.addEventListener("click",()=>{returnToCategories()});
