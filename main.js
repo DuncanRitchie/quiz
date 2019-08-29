@@ -500,29 +500,26 @@ openCategory = (i) => {
 openQuestion = (catNum, qNum) => {
     console.log("Question "+(qNum+1)+" of category "+(catNum+1)+" should load now.");
 
-    // if (categories[catNum].questions[qNum]) {
-        questionHead.textContent = "Question "+(qNum+1);
-        questionDiv.style.display = "initial";
-        question.textContent = categories[catNum].questions[qNum].q;
-        
-        const answers = categories[catNum].questions[qNum].answers;
-        answers.map((a, i)=>{
-            let node = document.createTextNode(a.a);
-            let button = document.createElement("button");
-            button.appendChild(node);
-        
-            button.className = "answer-button";
-            button.addEventListener("click",()=>{giveAnswer(catNum, qNum, i)});
-        
-            let li = document.createElement("li");
-            li.appendChild(button);
-            answerList.appendChild(li);
-        })
+    const catLength = categories[catNum].questions.length;
 
-    // }
-    // else {
-    //     endCategory(catNum);
-    // }
+    questionHead.textContent = "Question "+(qNum+1)+" of "+catLength;
+    questionHead.style.display = "initial";
+    questionDiv.style.display = "initial";
+    question.textContent = categories[catNum].questions[qNum].q;
+    
+    const answers = categories[catNum].questions[qNum].answers;
+    answers.map((a, i)=>{
+        let node = document.createTextNode(a.a);
+        let button = document.createElement("button");
+        button.appendChild(node);
+    
+        button.className = "answer-button";
+        button.addEventListener("click",()=>{giveAnswer(catNum, qNum, i)});
+    
+        let li = document.createElement("li");
+        li.appendChild(button);
+        answerList.appendChild(li);
+    })
     
     responseDiv.style.display = "none";
     
@@ -574,11 +571,11 @@ giveAnswer = (catNum, qNum, aNum) => {
 
 endCategory = () => {
     nextQuestion.style.display = "none";
-    questionHead.style.display = "none";
     endOfCategoryDiv.style.display = "initial";
 }
 
 returnToCategories = () => {
+    questionHead.style.display = "none";
     categoryListDiv.style.display = "initial";
     endOfCategoryDiv.style.display = "none";
     categoryHead.style.display = "none";
