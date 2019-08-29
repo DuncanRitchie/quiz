@@ -1,8 +1,11 @@
 console.log("JavaScript loaded!")
 
+
+
 ////
 //// QUESTION DATA
 ////
+
 
 const categories = [{
     category: "Geography",
@@ -434,9 +437,11 @@ const categories = [{
 console.log("Categories loaded!")
 
 
+
 ////
 //// DEFINING DOM ELEMENTS
 ////
+
 
 const categoryListDiv = document.getElementById("category-list-div");
 const categoryList = document.getElementById("category-list");
@@ -447,7 +452,9 @@ const question = document.getElementById("question");
 const answerList = document.getElementById("answer-list");
 const responseDiv = document.getElementById("response-div");
 const response = document.getElementById("response");
-const nextQuestion = document.getElementById("next-question");
+let nextQuestion = document.getElementById("next-question"); // This button is regenerated after every question.
+
+
 
 ////
 //// FUNCTIONS
@@ -462,7 +469,7 @@ openCategory = (i) => {
 }
 
 openQuestion = (catNum, qNum) => {
-    console.log("Question "+(qNum+1)+" of category "+catNum+" should load now.");
+    console.log("Question "+(qNum+1)+" of category "+(catNum+1)+" should load now.");
 
     questionHead.textContent = "Question "+(qNum+1);
     questionDiv.style.display = "initial";
@@ -483,6 +490,8 @@ openQuestion = (catNum, qNum) => {
     })
 
     responseDiv.style.display = "none";
+        
+    nextQuestion.removeEventListener("click",this)
 }
 
 giveAnswer = (catNum, qNum, aNum) => {
@@ -496,26 +505,44 @@ giveAnswer = (catNum, qNum, aNum) => {
     }
     console.log("All children of answer-list have been removed.")
 
-    console.log("You selected answer "+aNum+"!")
+    console.log("You selected answer "+(aNum+1)+"!")
 
     // Change the response depending on the answer option.
     let answerMessage = ( categories[catNum].questions[qNum].answers[aNum].correct ? "You got that right!" : "You got that wrong!" );
     response.innerText = answerMessage;
 
-    if (categories[catNum].questions[qNum+1]) {
-        nextQuestion.addEventListener("click", ()=>{openQuestion(catNum, qNum+1)})
+    // If there is a next question, we show a button to it.
+    const nextQNum = qNum+1;
+
+    if (categories[catNum].questions[nextQNum]) {
+        console.log("There is a next question.")
+
+        // Remove any previous event listener by replacing the button with a clone.
+        newButton = nextQuestion.cloneNode();
+        nextQuestion.replaceWith(newButton);
+        nextQuestion = newButton;
+        nextQuestion.textContent = "Next question"
+
+        nextQuestion.addEventListener("click", ()=>{
+            console.log("Opening Question "+(nextQNum+1));
+            openQuestion(catNum, nextQNum)
+        })
         responseDiv.style.display = "initial";
         nextQuestion.style.display = "initial";
     }
     else {
+        console.log("There are no more questions in this category.")
         nextQuestion.remove();
     }
     
 }
 
+
+
 ////
 //// INITIALISING CATEGORY LIST
 ////
+
 
 categories.map((cat, i)=>{
     let node = document.createTextNode(cat.category);
