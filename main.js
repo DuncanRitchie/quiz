@@ -179,7 +179,7 @@ const categories = [{
             ]
         },
         {
-            q: "On their national flags, what do Kazakhstan, Kiribati, Montenegro, and Uganda all have in common?",
+            q: "On their national flags, what do Albania, Kazakhstan, Kiribati, and Uganda all have in common?",
             answers: [
                 {
                     a: "The colour red",
@@ -482,7 +482,19 @@ let nextQuestion = document.getElementById("next-question"); // This button is r
 const endOfCategory = document.getElementById("end-of-category");
 const endOfCategoryDiv = document.getElementById("end-of-category-div");
 const backToCategories = document.getElementById("back-to-categories");
+const scoresDiv = document.getElementById("scores-div");
+const scoresList = document.getElementById("scores-list");
 
+
+
+////
+//// GAMEPLAY VARIABLES
+////
+
+let scoresArray = categories.map(()=>{return 0});
+let maxArray = categories.map((cat, i)=>{return categories[i].questions.length});
+console.log(scoresArray)
+console.log(maxArray)
 
 
 ////
@@ -493,8 +505,11 @@ const backToCategories = document.getElementById("back-to-categories");
 openCategory = (i) => {
     categoryListDiv.style.display = "none";
     categoryHead.textContent = categories[i].category;
-    openQuestion(i,0);
 
+    scoresArray[i] = 0;
+    updateScores();
+
+    openQuestion(i,0);
 }
 
 openQuestion = (catNum, qNum) => {
@@ -559,6 +574,12 @@ giveAnswer = (catNum, qNum, aNum) => {
     })
     responseDiv.style.display = "initial";
     nextQuestion.style.display = "initial";
+
+    if (categories[catNum].questions[qNum].answers[aNum].correct) {
+        scoresArray[catNum]++;
+        updateScores();
+    }
+    
     
     if (categories[catNum].questions[nextQNum]) {
         console.log("There is a next question.")
@@ -582,6 +603,22 @@ returnToCategories = () => {
     responseDiv.style.display = "none";
 }
 
+updateScores = () => {
+    while (scoresList.firstChild) {
+        scoresList.removeChild(scoresList.firstChild);
+        console.log("Removing the first child of scores-list!")
+    }
+
+    scoresArray.map((score, i)=>{
+        const text = categories[i].category+": "+score+" of "+maxArray[i];
+        const node = document.createTextNode(text);
+        const li = document.createElement("li");
+        li.appendChild(node);
+        scoresList.appendChild(li);
+    })
+}
+
+
 
 ////
 //// INITIALISING CATEGORY LIST
@@ -600,6 +637,7 @@ categories.map((cat, i)=>{
     categoryList.appendChild(li);
 })
 
+updateScores();
 
 
 ////

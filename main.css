@@ -22,10 +22,11 @@ body {
 #main {
     min-height: 100%;
     width: 100%;
+    padding-top: 10vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding-bottom: 36px
 }
 
@@ -53,11 +54,7 @@ button {
     min-width: 25vw;
 }
 
-#next-question {
-    display: none;
-}
-
-#end-of-category-div {
+#question-div,#response-div,#end-of-category-div {
     display: none;
 }
 
