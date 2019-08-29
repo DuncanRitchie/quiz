@@ -1,5 +1,9 @@
 console.log("JavaScript loaded!")
 
+////
+//// QUESTION DATA
+////
+
 const categories = [{
     category: "Geography",
     questions: [
@@ -430,20 +434,41 @@ const categories = [{
 console.log("Categories loaded!")
 
 
+////
+//// DEFINING DOM ELEMENTS
+////
+
+const categoryListDiv = document.getElementById("category-list-div");
+const categoryList = document.getElementById("category-list");
+const categoryHead = document.getElementById("category-head");
+const questionHead = document.getElementById("question-head");
+const questionDiv = document.getElementById("question-div");
+const question = document.getElementById("question");
+const answerList = document.getElementById("answer-list");
+const responseDiv = document.getElementById("response-div");
+const response = document.getElementById("response");
+const nextQuestion = document.getElementById("next-question");
+
+////
+//// FUNCTIONS
+////
+
+
 openCategory = (i) => {
-    document.getElementById("category-list-div").remove();
-    document.getElementById("category-head").textContent = categories[i].category;
+    categoryListDiv.remove();
+    categoryHead.textContent = categories[i].category;
     openQuestion(i,0);
 
 }
 
 openQuestion = (catNum, qNum) => {
     console.log("Question "+(qNum+1)+" of category "+catNum+" should load now.");
-    document.getElementById("question-head").textContent = "Question "+(qNum+1);
-    document.getElementById("question").textContent = categories[catNum].questions[qNum].q;
+
+    questionHead.textContent = "Question "+(qNum+1);
+    questionDiv.style.display = "initial";
+    question.textContent = categories[catNum].questions[qNum].q;
     
     const answers = categories[catNum].questions[qNum].answers;
-    const answerList = document.getElementById("answer-list")
     answers.map((a, i)=>{
         let node = document.createTextNode(a.a);
         let button = document.createElement("button");
@@ -456,30 +481,41 @@ openQuestion = (catNum, qNum) => {
         li.appendChild(button);
         answerList.appendChild(li);
     })
+
+    responseDiv.style.display = "none";
 }
 
 giveAnswer = (catNum, qNum, aNum) => {
-    const answerList = document.getElementById("answer-list");
+    console.log("The verdict on the answer to question "+(qNum+1)+" of category "+catNum+" should load now.");
+    questionDiv.style.display = "none";
+
     // Clear any pre-existing answer options.
     while (answerList.firstChild) {
         answerList.removeChild(answerList.firstChild);
+        console.log("Removing the first child of answer-list!")
     }
+    console.log("All children of answer-list have been removed.")
 
     console.log("You selected answer "+aNum+"!")
 
-    // Change the response to the answer option.
+    // Change the response depending on the answer option.
     let answerMessage = ( categories[catNum].questions[qNum].answers[aNum].correct ? "You got that right!" : "You got that wrong!" );
-    document.getElementById("response").innerText = answerMessage;
+    response.innerText = answerMessage;
 
-    let nextQuestion = document.getElementById("next-question");
     if (categories[catNum].questions[qNum+1]) {
-        nextQuestion.addEventListener("click", openQuestion(catNum, qNum+1))
+        nextQuestion.addEventListener("click", ()=>{openQuestion(catNum, qNum+1)})
+        responseDiv.style.display = "initial";
+        nextQuestion.style.display = "initial";
     }
     else {
         nextQuestion.remove();
     }
     
 }
+
+////
+//// INITIALISING CATEGORY LIST
+////
 
 categories.map((cat, i)=>{
     let node = document.createTextNode(cat.category);
@@ -490,7 +526,5 @@ categories.map((cat, i)=>{
 
     let li = document.createElement("li");
     li.appendChild(button);
-    document.getElementById("category-list").appendChild(li);
+    categoryList.appendChild(li);
 })
-
-
