@@ -106,7 +106,7 @@ const categories = [{
                     correct: false
                 },
                 {
-                    a: "Hawaii",
+                    a: "Hawaiʻi",
                     correct: false
                 },
                 {

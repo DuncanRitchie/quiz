@@ -49,9 +49,6 @@ button {
     padding: 6px 12px;
     margin-top: 6px;
     margin-bottom: 6px;
-}
-
-.answer-button {
     width: 200px;
     min-width: 25vw;
 }
