@@ -226,19 +226,23 @@ const categories = [{
     category: "Music",
     questions: [
         {
-            q: "What's that coming over the hill?",
+            q: "Which of these Taylor Swift albums was released first?",
             answers: [
                 {
-                    a: "Is it a monster?",
+                    a: "Lover",
+                    correct: false
+                },
+                {
+                    a: "Speak Now",
                     correct: true
                 },
                 {
-                    a: "Is it a monster?",
-                    correct: true
+                    a: "Red",
+                    correct: false
                 },
                 {
-                    a: "Is it a monstaaaa?",
-                    correct: true
+                    a: "1989",
+                    correct: false
                 }
             ]
         },
@@ -411,22 +415,22 @@ const categories = [{
             ]
         },
         {
-            q: "All the options for the previous question are names of studio albums by which band?",
+            q: "What Glaswegian band comprises Lauren Mayberry, Iain Cook, and Martin Doherty?",
             answers: [
                 {
-                    a: "Paramore",
+                    a: "Texas",
                     correct: false
                 },
                 {
-                    a: "Jefferson Airplane",
+                    a: "Franz Ferdinand",
                     correct: false
                 },
                 {
-                    a: "Big Brother and the Holding Company",
+                    a: "Chvrches",
                     correct: true
                 },
                 {
-                    a: "Nickelback",
+                    a: "Mogwai",
                     correct: false
                 }
             ]
@@ -488,6 +492,7 @@ const progressTrack = document.getElementById("progress-track");
 const progressBar = document.getElementById("progress-bar");
 const catAnswerCount = document.getElementById("cat-answer-count");
 const catPotentialCount = document.getElementById("cat-potential-count");
+const pointsP = document.getElementById("points-p");
 
 
 
@@ -581,6 +586,9 @@ giveAnswer = (catNum, qNum, aNum) => {
 
     // Update scores if answered correctly.
     if (categories[catNum].questions[qNum].answers[aNum].correct) {
+        categories[catNum].questions[qNum].answeredCorrectly = true;
+        updatePoints();
+
         scoresArray[catNum]++;
         updateScores();
     }
@@ -614,9 +622,12 @@ returnToCategories = () => {
 }
 
 updateProgress = (numerator, denominator) => {
+    // Set the values in the progress-bar label.
     catAnswerCount.textContent = numerator;
     catPotentialCount.textContent = denominator;
 
+    // The new progress-bar length is the quotient of the two parameters as a percentage.
+    // If we're going to be dividing by zero, divide by one instead.
     if (!denominator) {denominator=1}
     const newLength = 100*numerator/denominator
     
@@ -637,6 +648,18 @@ updateScores = () => {
         li.appendChild(node);
         scoresList.appendChild(li);
     })
+}
+
+updatePoints = () => {
+    let points = 0;
+    for (let i = 0; i < categories.length; i++) {
+        for (let j = 0; j < categories[i].questions.length; j++) {
+            if (categories[i].questions[j].answeredCorrectly) {
+                points += 50;
+            }
+        }
+    }
+    pointsP.textContent = points;
 }
 
 
