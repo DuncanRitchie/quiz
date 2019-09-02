@@ -482,7 +482,7 @@ const question = document.getElementById("question");
 const answerList = document.getElementById("answer-list");
 const responseDiv = document.getElementById("response-div");
 const response = document.getElementById("response");
-let nextQuestion = document.getElementById("next-question"); // This button is regenerated after every question.
+let nextQuestion = document.getElementById("next-question"); // This button is regenerated after every question, hence 'let'.
 const endOfCategory = document.getElementById("end-of-category");
 const endOfCategoryDiv = document.getElementById("end-of-category-div");
 const backToCategories = document.getElementById("back-to-categories");
@@ -493,6 +493,8 @@ const progressBar = document.getElementById("progress-bar");
 const catAnswerCount = document.getElementById("cat-answer-count");
 const catPotentialCount = document.getElementById("cat-potential-count");
 const pointsP = document.getElementById("points-p");
+const ifPreviouslyAnswered = document.getElementById("if-previously-answered");
+const ifPreviouslyAnsweredVerdict = document.getElementById("if-previously-answered-verdict");
 
 
 
@@ -526,9 +528,11 @@ openQuestion = (catNum, qNum) => {
 
     const catLength = categories[catNum].questions.length;
 
+    // E.g. "Question 3 of 10"
     questionHead.textContent = "Question "+(qNum+1)+" of "+catLength;
     questionHead.style.display = "initial";
     questionDiv.style.display = "initial";
+    // Display the question.
     question.textContent = categories[catNum].questions[qNum].q;
     
     const answers = categories[catNum].questions[qNum].answers;
@@ -562,14 +566,8 @@ giveAnswer = (catNum, qNum, aNum) => {
 
     console.log("You selected answer "+(aNum+1)+"!")
 
-    // Change the response depending on the answer option.
-    let answerMessage = ( categories[catNum].questions[qNum].answers[aNum].correct ? "You got that right!" : "You got that wrong!" );
-    response.innerText = answerMessage;
-
     // If there is a next question, we show a button to it.
     const nextQNum = qNum+1;
-
-    
 
     // Remove any previous event listener by replacing the button with a clone.
     newButton = nextQuestion.cloneNode();
@@ -586,13 +584,25 @@ giveAnswer = (catNum, qNum, aNum) => {
 
     // Update scores if answered correctly.
     if (categories[catNum].questions[qNum].answers[aNum].correct) {
+        // The user has certainly answered the question right.
         categories[catNum].questions[qNum].answeredCorrectly = true;
         updatePoints();
 
+        // Increment the relevant value of scores-array.
         scoresArray[catNum]++;
         updateScores();
+
+        // Tell the user they were right.
+        response.innerText = "You got that right!"
     }
-    
+    else {
+        // The user may have answered the answer right before, in which case answeredCorrectly should stay true.
+        categories[catNum].questions[qNum].answeredCorrectly = categories[catNum].questions[qNum].answeredCorrectly || false;
+
+        // Tell the user they were wrong.
+        response.innerText = "You got that wrong!"
+    }
+
     // Increase the progress bar.
     updateProgress(qNum+1, categories[catNum].questions.length);
 
