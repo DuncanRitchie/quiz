@@ -486,6 +486,8 @@ const scoresDiv = document.getElementById("scores-div");
 const scoresList = document.getElementById("scores-list");
 const progressTrack = document.getElementById("progress-track");
 const progressBar = document.getElementById("progress-bar");
+const catAnswerCount = document.getElementById("cat-answer-count");
+const catPotentialCount = document.getElementById("cat-potential-count");
 
 
 
@@ -612,6 +614,9 @@ returnToCategories = () => {
 }
 
 updateProgress = (numerator, denominator) => {
+    catAnswerCount.textContent = numerator;
+    catPotentialCount.textContent = denominator;
+
     const newLength = 100*numerator/denominator
     
     console.log("Progress bar should be "+newLength+"%")
