@@ -35,7 +35,7 @@ h2 {
 }
 
 label {
-    width: 100%;
+    width: calc(100% - 12px);
     text-align: left;
     font-size: 12px;
     margin-bottom: -16px;

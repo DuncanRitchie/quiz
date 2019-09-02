@@ -610,13 +610,14 @@ returnToCategories = () => {
     categoryHead.style.display = "none";
     responseDiv.style.display = "none";
 
-    updateProgress(0,1);
+    updateProgress(0,0);
 }
 
 updateProgress = (numerator, denominator) => {
     catAnswerCount.textContent = numerator;
     catPotentialCount.textContent = denominator;
 
+    if (!denominator) {denominator=1}
     const newLength = 100*numerator/denominator
     
     console.log("Progress bar should be "+newLength+"%")
