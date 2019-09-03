@@ -11,7 +11,7 @@ const categories = [{
     category: "Geography",
     questions: [
         {
-            q: "What is the name given to a pond formed from a meander being cut off from a river?",
+            q: "What is the name given to a pool formed from a meander being cut off from a river?",
             answers: [
                 {
                     a: "Oxbow lake",
@@ -29,7 +29,11 @@ const categories = [{
                     a: "Kine-kink sink",
                     correct: false
                 }
-            ]
+            ],
+            answered: false,
+            answeredCorrectly: false,
+            startDate: null,
+            time: undefined,
         },
         {
             q: "Indonesia is currently building itself a new capital city on which island?",
@@ -226,19 +230,23 @@ const categories = [{
     category: "Music",
     questions: [
         {
-            q: "What's that coming over the hill?",
+            q: "Which of these Taylor Swift albums was released first?",
             answers: [
                 {
-                    a: "Is it a monster?",
+                    a: "Lover",
+                    correct: false
+                },
+                {
+                    a: "Speak Now",
                     correct: true
                 },
                 {
-                    a: "Is it a monster?",
-                    correct: true
+                    a: "Red",
+                    correct: false
                 },
                 {
-                    a: "Is it a monstaaaa?",
-                    correct: true
+                    a: "1989",
+                    correct: false
                 }
             ]
         },
@@ -348,7 +356,7 @@ const categories = [{
             ]
         },
         {
-            q: "What was number one in the UK singles chart when I was born?",
+            q: "What was number one in the UK singles chart when I was born in June 1996?",
             answers: [
                 {
                     a: "'Love Is All Around' by Wet Wet Wet",
@@ -411,22 +419,22 @@ const categories = [{
             ]
         },
         {
-            q: "All the options for the previous question are names of studio albums by which band?",
+            q: "What Glaswegian band comprises Lauren Mayberry, Iain Cook, and Martin Doherty?",
             answers: [
                 {
-                    a: "Paramore",
+                    a: "Texas",
                     correct: false
                 },
                 {
-                    a: "Jefferson Airplane",
+                    a: "Franz Ferdinand",
                     correct: false
                 },
                 {
-                    a: "Big Brother and the Holding Company",
+                    a: "Chvrches",
                     correct: true
                 },
                 {
-                    a: "Nickelback",
+                    a: "Mogwai",
                     correct: false
                 }
             ]
@@ -478,7 +486,7 @@ const question = document.getElementById("question");
 const answerList = document.getElementById("answer-list");
 const responseDiv = document.getElementById("response-div");
 const response = document.getElementById("response");
-let nextQuestion = document.getElementById("next-question"); // This button is regenerated after every question.
+let nextQuestion = document.getElementById("next-question"); // This button is regenerated after every question, hence 'let'.
 const endOfCategory = document.getElementById("end-of-category");
 const endOfCategoryDiv = document.getElementById("end-of-category-div");
 const backToCategories = document.getElementById("back-to-categories");
@@ -486,6 +494,14 @@ const scoresDiv = document.getElementById("scores-div");
 const scoresList = document.getElementById("scores-list");
 const progressTrack = document.getElementById("progress-track");
 const progressBar = document.getElementById("progress-bar");
+const catAnswerCount = document.getElementById("cat-answer-count");
+const catPotentialCount = document.getElementById("cat-potential-count");
+const ifPreviouslyAnswered = document.getElementById("if-previously-answered");
+const ifPreviouslyAnsweredVerdict = document.getElementById("if-previously-answered-verdict");
+const responseTime = document.getElementById("response-time");
+const pointsBar = document.getElementById("points-bar");
+const pointsCount = document.getElementById("points-count");
+const pointsMaximum = document.getElementById("points-maximum");
 
 
 
@@ -498,6 +514,24 @@ let maxArray = categories.map((cat, i)=>{return categories[i].questions.length})
 console.log(scoresArray)
 console.log(maxArray)
 
+const pointsPerRightAnswer = 40; // Users get forty points per correct answer regardless of time.
+const maxSeconds = 60; // Sixty seconds to answer to get the time points.
+
+
+// getMaximumPoints() only runs on startup.
+getMaximumPoints = () => {
+    let maximumPoints = 0;
+    for (let i = 0; i < categories.length; i++) {
+        for (let j = 0; j < categories[i].questions.length; j++) {
+            maximumPoints += pointsPerRightAnswer + maxSeconds;
+        }
+    }
+    pointsMaximum.textContent = maximumPoints;
+    return maximumPoints;
+}
+
+const maximumPoints = getMaximumPoints();
+
 
 ////
 //// FUNCTIONS
@@ -506,6 +540,7 @@ console.log(maxArray)
 
 openCategory = (i) => {
     categoryListDiv.style.display = "none";
+    categoryHead.style.display = "initial";
     categoryHead.textContent = categories[i].category;
 
     scoresArray[i] = 0;
@@ -519,11 +554,28 @@ openQuestion = (catNum, qNum) => {
 
     const catLength = categories[catNum].questions.length;
 
+    // E.g. "Question 3 of 10"
     questionHead.textContent = "Question "+(qNum+1)+" of "+catLength;
     questionHead.style.display = "initial";
     questionDiv.style.display = "initial";
+
+    // If the question has been previously answered, declare so.
+    if (categories[catNum].questions[qNum].answeredCorrectly) {
+        ifPreviouslyAnswered.style.display = "initial";
+        ifPreviouslyAnsweredVerdict.textContent = "right";
+    }
+    else if (categories[catNum].questions[qNum].answered) {
+        ifPreviouslyAnswered.style.display = "initial";
+        ifPreviouslyAnsweredVerdict.textContent = "wrong";
+    }
+    else {
+        ifPreviouslyAnswered.style.display = "none";
+    }
+
+    // Display the question.
     question.textContent = categories[catNum].questions[qNum].q;
     
+    // Display the possible answers.
     const answers = categories[catNum].questions[qNum].answers;
     answers.map((a, i)=>{
         let node = document.createTextNode(a.a);
@@ -537,7 +589,11 @@ openQuestion = (catNum, qNum) => {
         li.appendChild(button);
         answerList.appendChild(li);
     })
+
+    // Start the timer.
+    startTimer(catNum, qNum);
     
+    // The response div should not display.
     responseDiv.style.display = "none";
     
 }
@@ -555,14 +611,11 @@ giveAnswer = (catNum, qNum, aNum) => {
 
     console.log("You selected answer "+(aNum+1)+"!")
 
-    // Change the response depending on the answer option.
-    let answerMessage = ( categories[catNum].questions[qNum].answers[aNum].correct ? "You got that right!" : "You got that wrong!" );
-    response.innerText = answerMessage;
+    // The question has now been answered.
+    categories[catNum].questions[qNum].answered = true;
 
     // If there is a next question, we show a button to it.
     const nextQNum = qNum+1;
-
-    
 
     // Remove any previous event listener by replacing the button with a clone.
     newButton = nextQuestion.cloneNode();
@@ -579,10 +632,33 @@ giveAnswer = (catNum, qNum, aNum) => {
 
     // Update scores if answered correctly.
     if (categories[catNum].questions[qNum].answers[aNum].correct) {
+        // The user has certainly answered the question right.
+        categories[catNum].questions[qNum].answeredCorrectly = true;
+
+        // Increment the relevant value of scores-array.
         scoresArray[catNum]++;
         updateScores();
+
+        // Tell the user they were right.
+        response.innerText = "You got that right!"
+
+        // Stop the timer and display the new time.
+        endTimer(catNum, qNum);
+
+        // Calculate the new points and tell the user.
+        updatePoints();
     }
-    
+    else {
+        // The user may have answered the answer right before, in which case answeredCorrectly should stay true.
+        categories[catNum].questions[qNum].answeredCorrectly = categories[catNum].questions[qNum].answeredCorrectly || false;
+
+        // Tell the user they were wrong.
+        response.innerText = "You got that wrong!"
+
+        // Hide the response time p.
+        responseTime.style.display = "none"
+    }
+
     // Increase the progress bar.
     updateProgress(qNum+1, categories[catNum].questions.length);
 
@@ -608,14 +684,68 @@ returnToCategories = () => {
     categoryHead.style.display = "none";
     responseDiv.style.display = "none";
 
-    updateProgress(0,1);
+    updateProgress(0,0);
 }
 
+startTimer = (catNum, qNum) => {
+    startDate = new Date();
+    categories[catNum].questions[qNum].startDate = startDate;
+}
+
+// endTimer calculates the time the question was most recently answered in, and 
+// changes categories[catNum].questions[qNum].time if that new time is less.
+endTimer = (catNum, qNum) => {
+    endDate = new Date();
+    console.log("endDate = "+endDate)
+    newTime = endDate - categories[catNum].questions[qNum].startDate;
+    console.log("newTime = "+newTime)
+    
+    if (newTime < categories[catNum].questions[qNum].time || categories[catNum].questions[qNum].time==undefined) {
+        categories[catNum].questions[qNum].time = newTime;
+    }
+
+    responseTime.style.display = "block";
+    responseTime.textContent = `You answered that question in ${newTime/1000} seconds. Your best time for this question is ${categories[catNum].questions[qNum].time/1000} seconds.`
+}
+
+
 updateProgress = (numerator, denominator) => {
+    // Set the values in the progress-bar label.
+    catAnswerCount.textContent = numerator;
+    catPotentialCount.textContent = denominator;
+
+    // The new progress-bar length is the quotient of the two parameters as a percentage.
+    // If we're going to be dividing by zero, divide by one instead.
+    if (!denominator) {denominator=1}
     const newLength = 100*numerator/denominator
     
     console.log("Progress bar should be "+newLength+"%")
     progressBar.style.width = newLength+"%";
+}
+
+updatePoints = () => {
+    let points = 0;
+    for (let i = 0; i < categories.length; i++) {
+        for (let j = 0; j < categories[i].questions.length; j++) {
+            // Points are awarded for any question answered correctly.
+            if (categories[i].questions[j].answeredCorrectly) {
+                points += pointsPerRightAnswer;
+            }
+            // Further points are awarded for speed of answering correctly.
+            if (categories[i].questions[j].time) {
+                let timePoints = Math.round(maxSeconds - categories[i].questions[j].time/1000);
+                // No points are awarded here if the time exceeds maxSeconds.
+                if (timePoints > 0) {
+                    points += timePoints;
+                }
+            }
+        }
+    }
+    pointsCount.textContent = points;
+
+    newLength = 100*points/maximumPoints;
+    pointsBar.style.width = newLength+"%";
+    console.log("The points bar should now be "+newLength+"%.")
 }
 
 updateScores = () => {
@@ -636,7 +766,7 @@ updateScores = () => {
 
 
 ////
-//// INITIALISING CATEGORY LIST
+//// INITIALISING LISTS OF CATEGORIES AND SCORES
 ////
 
 
