@@ -356,7 +356,7 @@ const categories = [{
             ]
         },
         {
-            q: "What was number one in the UK singles chart when I was born?",
+            q: "What was number one in the UK singles chart when I was born in June 1996?",
             answers: [
                 {
                     a: "'Love Is All Around' by Wet Wet Wet",
@@ -540,6 +540,7 @@ const maximumPoints = getMaximumPoints();
 
 openCategory = (i) => {
     categoryListDiv.style.display = "none";
+    categoryHead.style.display = "initial";
     categoryHead.textContent = categories[i].category;
 
     scoresArray[i] = 0;
