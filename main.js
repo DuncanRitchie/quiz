@@ -614,7 +614,6 @@ giveAnswer = (catNum, qNum, aNum) => {
     if (categories[catNum].questions[qNum].answers[aNum].correct) {
         // The user has certainly answered the question right.
         categories[catNum].questions[qNum].answeredCorrectly = true;
-        updatePoints();
 
         // Increment the relevant value of scores-array.
         scoresArray[catNum]++;
@@ -625,6 +624,9 @@ giveAnswer = (catNum, qNum, aNum) => {
 
         // Stop the timer and display the new time.
         endTimer(catNum, qNum);
+
+        // Calculate the new points and tell the user.
+        updatePoints();
     }
     else {
         // The user may have answered the answer right before, in which case answeredCorrectly should stay true.
@@ -701,6 +703,29 @@ updateProgress = (numerator, denominator) => {
     progressBar.style.width = newLength+"%";
 }
 
+updatePoints = () => {
+    const pointsPerRightAnswer = 40; // Users get forty points per correct answer regardless of time.
+    const maxSeconds = 60; // Sixty seconds to answer to get the time points.
+    let points = 0;
+    for (let i = 0; i < categories.length; i++) {
+        for (let j = 0; j < categories[i].questions.length; j++) {
+            // Points are awarded for any question answered correctly.
+            if (categories[i].questions[j].answeredCorrectly) {
+                points += pointsPerRightAnswer;
+            }
+            // Further points are awarded for speed of answering correctly.
+            if (categories[i].questions[j].time) {
+                let timePoints = Math.round(maxSeconds - categories[i].questions[j].time/1000);
+                // No points are awarded here if the time exceeds maxSeconds.
+                if (timePoints > 0) {
+                    points += timePoints;
+                }
+            }
+        }
+    }
+    pointsP.textContent = points;
+}
+
 updateScores = () => {
     while (scoresList.firstChild) {
         scoresList.removeChild(scoresList.firstChild);
@@ -714,18 +739,6 @@ updateScores = () => {
         li.appendChild(node);
         scoresList.appendChild(li);
     })
-}
-
-updatePoints = () => {
-    let points = 0;
-    for (let i = 0; i < categories.length; i++) {
-        for (let j = 0; j < categories[i].questions.length; j++) {
-            if (categories[i].questions[j].answeredCorrectly) {
-                points += 50;
-            }
-        }
-    }
-    pointsP.textContent = points;
 }
 
 
