@@ -22,7 +22,7 @@ body {
 #main {
     min-height: 100%;
     width: 100%;
-    padding-top: 10vh;
+    padding-top: 5vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -89,6 +89,10 @@ button {
 
 #question-div,#if-previously-answered,#response-div,#end-of-category-div {
     display: none;
+}
+
+#if-previously-answered,#response-time {
+    padding: 12px;
 }
 
 #points-p {
