@@ -11,7 +11,7 @@ const categories = [{
     category: "Geography",
     questions: [
         {
-            q: "What is the name given to a pond formed from a meander being cut off from a river?",
+            q: "What is the name given to a pool formed from a meander being cut off from a river?",
             answers: [
                 {
                     a: "Oxbow lake",
@@ -29,7 +29,10 @@ const categories = [{
                     a: "Kine-kink sink",
                     correct: false
                 }
-            ]
+            ],
+            answered: false,
+            answeredCorrectly: false,
+            time: 0,
         },
         {
             q: "Indonesia is currently building itself a new capital city on which island?",
@@ -508,6 +511,7 @@ console.log(scoresArray)
 console.log(maxArray)
 
 
+
 ////
 //// FUNCTIONS
 ////
@@ -532,9 +536,24 @@ openQuestion = (catNum, qNum) => {
     questionHead.textContent = "Question "+(qNum+1)+" of "+catLength;
     questionHead.style.display = "initial";
     questionDiv.style.display = "initial";
+
+    // If the question has been previously answered, declare so.
+    if (categories[catNum].questions[qNum].answeredCorrectly) {
+        ifPreviouslyAnswered.style.display = "initial";
+        ifPreviouslyAnsweredVerdict.textContent = "right";
+    }
+    else if (categories[catNum].questions[qNum].answered) {
+        ifPreviouslyAnswered.style.display = "initial";
+        ifPreviouslyAnsweredVerdict.textContent = "wrong";
+    }
+    else {
+        ifPreviouslyAnswered.style.display = "none";
+    }
+
     // Display the question.
     question.textContent = categories[catNum].questions[qNum].q;
     
+    // Display the possible answers.
     const answers = categories[catNum].questions[qNum].answers;
     answers.map((a, i)=>{
         let node = document.createTextNode(a.a);
@@ -549,6 +568,7 @@ openQuestion = (catNum, qNum) => {
         answerList.appendChild(li);
     })
     
+    // The response div should not display.
     responseDiv.style.display = "none";
     
 }
@@ -565,6 +585,9 @@ giveAnswer = (catNum, qNum, aNum) => {
     console.log("All children of answer-list have been removed.")
 
     console.log("You selected answer "+(aNum+1)+"!")
+
+    // The question has now been answered.
+    categories[catNum].questions[qNum].answered = true;
 
     // If there is a next question, we show a button to it.
     const nextQNum = qNum+1;

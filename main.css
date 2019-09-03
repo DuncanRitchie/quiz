@@ -87,7 +87,7 @@ button {
     min-width: 18vw;
 }
 
-#question-div,#response-div,#end-of-category-div {
+#question-div,#if-previously-answered,#response-div,#end-of-category-div {
     display: none;
 }
 
