@@ -496,7 +496,6 @@ const progressTrack = document.getElementById("progress-track");
 const progressBar = document.getElementById("progress-bar");
 const catAnswerCount = document.getElementById("cat-answer-count");
 const catPotentialCount = document.getElementById("cat-potential-count");
-const pointsP = document.getElementById("points-p");
 const ifPreviouslyAnswered = document.getElementById("if-previously-answered");
 const ifPreviouslyAnsweredVerdict = document.getElementById("if-previously-answered-verdict");
 const responseTime = document.getElementById("response-time");
@@ -741,7 +740,6 @@ updatePoints = () => {
             }
         }
     }
-    pointsP.textContent = points;
     pointsCount.textContent = points;
 
     newLength = 100*points/maximumPoints;
