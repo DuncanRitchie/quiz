@@ -500,6 +500,9 @@ const pointsP = document.getElementById("points-p");
 const ifPreviouslyAnswered = document.getElementById("if-previously-answered");
 const ifPreviouslyAnsweredVerdict = document.getElementById("if-previously-answered-verdict");
 const responseTime = document.getElementById("response-time");
+const pointsBar = document.getElementById("points-bar");
+const pointsCount = document.getElementById("points-count");
+const pointsMaximum = document.getElementById("points-maximum");
 
 
 
@@ -512,6 +515,23 @@ let maxArray = categories.map((cat, i)=>{return categories[i].questions.length})
 console.log(scoresArray)
 console.log(maxArray)
 
+const pointsPerRightAnswer = 40; // Users get forty points per correct answer regardless of time.
+const maxSeconds = 60; // Sixty seconds to answer to get the time points.
+
+
+// getMaximumPoints() only runs on startup.
+getMaximumPoints = () => {
+    let maximumPoints = 0;
+    for (let i = 0; i < categories.length; i++) {
+        for (let j = 0; j < categories[i].questions.length; j++) {
+            maximumPoints += pointsPerRightAnswer + maxSeconds;
+        }
+    }
+    pointsMaximum.textContent = maximumPoints;
+    return maximumPoints;
+}
+
+const maximumPoints = getMaximumPoints();
 
 
 ////
@@ -704,8 +724,6 @@ updateProgress = (numerator, denominator) => {
 }
 
 updatePoints = () => {
-    const pointsPerRightAnswer = 40; // Users get forty points per correct answer regardless of time.
-    const maxSeconds = 60; // Sixty seconds to answer to get the time points.
     let points = 0;
     for (let i = 0; i < categories.length; i++) {
         for (let j = 0; j < categories[i].questions.length; j++) {
@@ -724,6 +742,11 @@ updatePoints = () => {
         }
     }
     pointsP.textContent = points;
+    pointsCount.textContent = points;
+
+    newLength = 100*points/maximumPoints;
+    pointsBar.style.width = newLength+"%";
+    console.log("The points bar should now be "+newLength+"%.")
 }
 
 updateScores = () => {
@@ -744,7 +767,7 @@ updateScores = () => {
 
 
 ////
-//// INITIALISING CATEGORY LIST
+//// INITIALISING LISTS OF CATEGORIES AND SCORES
 ////
 
 
