@@ -32,7 +32,8 @@ const categories = [{
             ],
             answered: false,
             answeredCorrectly: false,
-            time: 0,
+            startDate: null,
+            time: undefined,
         },
         {
             q: "Indonesia is currently building itself a new capital city on which island?",
@@ -498,6 +499,7 @@ const catPotentialCount = document.getElementById("cat-potential-count");
 const pointsP = document.getElementById("points-p");
 const ifPreviouslyAnswered = document.getElementById("if-previously-answered");
 const ifPreviouslyAnsweredVerdict = document.getElementById("if-previously-answered-verdict");
+const responseTime = document.getElementById("response-time");
 
 
 
@@ -567,6 +569,9 @@ openQuestion = (catNum, qNum) => {
         li.appendChild(button);
         answerList.appendChild(li);
     })
+
+    // Start the timer.
+    startTimer(catNum, qNum);
     
     // The response div should not display.
     responseDiv.style.display = "none";
@@ -617,6 +622,9 @@ giveAnswer = (catNum, qNum, aNum) => {
 
         // Tell the user they were right.
         response.innerText = "You got that right!"
+
+        // Stop the timer and display the new time.
+        endTimer(catNum, qNum);
     }
     else {
         // The user may have answered the answer right before, in which case answeredCorrectly should stay true.
@@ -624,6 +632,9 @@ giveAnswer = (catNum, qNum, aNum) => {
 
         // Tell the user they were wrong.
         response.innerText = "You got that wrong!"
+
+        // Hide the response time p.
+        responseTime.style.display = "none"
     }
 
     // Increase the progress bar.
@@ -653,6 +664,28 @@ returnToCategories = () => {
 
     updateProgress(0,0);
 }
+
+startTimer = (catNum, qNum) => {
+    startDate = new Date();
+    categories[catNum].questions[qNum].startDate = startDate;
+}
+
+// endTimer calculates the time the question was most recently answered in, and 
+// changes categories[catNum].questions[qNum].time if that new time is less.
+endTimer = (catNum, qNum) => {
+    endDate = new Date();
+    console.log("endDate = "+endDate)
+    newTime = endDate - categories[catNum].questions[qNum].startDate;
+    console.log("newTime = "+newTime)
+    
+    if (newTime < categories[catNum].questions[qNum].time || categories[catNum].questions[qNum].time==undefined) {
+        categories[catNum].questions[qNum].time = newTime;
+    }
+
+    responseTime.style.display = "block";
+    responseTime.textContent = `You answered that question in ${newTime/1000} seconds. Your best time for this question is ${categories[catNum].questions[qNum].time/1000} seconds.`
+}
+
 
 updateProgress = (numerator, denominator) => {
     // Set the values in the progress-bar label.
