@@ -31,7 +31,10 @@ body {
 }
 
 h1 {
-    margin-bottom: 36px;
+    background-image: linear-gradient(rgba(253, 158, 147, 0.1), rgb(255, 44, 150), rgba(255, 135, 88, 0.1));
+    width: calc(100% - 12px);
+    padding: 6px;
+    margin: 18px 0 12px;
 }
 
 h2 {
@@ -69,6 +72,10 @@ label {
     height: inherit;
     background-color: rgb(223, 120, 79);
     transition: width 0.8s linear;
+}
+
+#category-head {
+    margin-top: 12px;
 }
 
 #question,#category-list-p {
