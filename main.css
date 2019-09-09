@@ -10,7 +10,7 @@ body {
     text-align: center;
     min-height: 100%;
     width: 100%;
-    background-image: linear-gradient(to top, hotpink, salmon);
+    background-image: linear-gradient(to top, rgb(255, 44, 150), rgb(255, 135, 88));
     background-attachment: fixed;
     padding: 0;
     margin: 0;
@@ -145,12 +145,12 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    background-image: linear-gradient(to bottom, hotpink, salmon);
+    background-image: linear-gradient(to bottom, rgb(255, 44, 150), rgb(255, 135, 88));
     z-index: 2;
 }
 
-a:link {
-    color: darkblue;
+li a:hover {
+    color: rgb(0, 52, 221);
 }
 
 a:focus {
