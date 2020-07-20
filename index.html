@@ -11,7 +11,7 @@
 <body>
     <div id="main">
         <h1>Duncan&rsquo;s Quiz App</h1>
-        <label for="progress-track">Progress through current category: <span id="cat-answer-count">0</span> answers given for <span id="cat-potential-count">0</span> questions</label>
+        <label>Progress through current category: <span id="cat-answer-count">0</span> answers given for <span id="cat-potential-count">0</span> questions</label>
         <div id="progress-track">
             <div id="progress-bar"></div>
         </div>
@@ -19,8 +19,8 @@
             <p id="categor-list-p">Select a category!</p>
             <ul id="category-list"></ul>
         </div>
-        <h2 id="category-head"></h2>
-        <h3 id="question-head"></h2>
+        <h2 id="category-head"> </h2>
+        <h3 id="question-head"> </h2>
         <div id="question-div">
             <p id="if-previously-answered">You have answered this question before. You&nbsp;got&nbsp;it&nbsp;<span id="if-previously-answered-verdict">wrong</span>.</p>
             <p id="question"></p>
@@ -37,7 +37,7 @@
         </div>
         <div id="points-div">
             <h2>Your points</h2>
-            <label for="points-track"><span id="points-count">0</span> of a possible <span id="points-maximum">0</span></label>
+            <label><span id="points-count">0</span> of a possible <span id="points-maximum">0</span></label>
             <div id="points-track">
                 <div id="points-bar"></div>
             </div>
@@ -50,9 +50,11 @@
     
     
     <footer>
-        <li>Made by Duncan Ritchie</li>
-        <li><a href="https://www.github.com/DuncanRitchie2/quiz" title="Code on GitHub">See the code</a></li>
-        <li><a href="https://www.duncanritchie.co.uk" title="My website">My website</a></li>
+        <ul>
+            <li>Made by Duncan Ritchie</li>
+            <li><a href="https://www.github.com/DuncanRitchie2/quiz" title="Code on GitHub">See the code</a></li>
+            <li><a href="https://www.duncanritchie.co.uk" title="My website">My website</a></li>
+        </ul>
     </footer>
     <script src="./main.js"></script>
 </body>
